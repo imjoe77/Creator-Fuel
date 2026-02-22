@@ -1,98 +1,70 @@
 "use client"
-import Link from "next/link";
-import { FaGoogle, FaGithub, FaApple, FaFacebook, FaLinkedin } from "react-icons/fa";
-import { useSession, signIn, signOut } from "next-auth/react"
+import React from 'react';
+import { FaGoogle, FaGithub } from "react-icons/fa";
+import { useSession, signIn } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Login() {
     const { data: session } = useSession()
-    const router=useRouter()
+    const router = useRouter()
+
     useEffect(() => {
-      if(session) {
-        
-        router.push('/dashboard')
+        if (session) {
+            router.push('/dashboard')
         }
-    
-     
     }, [session, router])
-    
-        
-  return (
-    <>
-      {/* Top Bar */}
-      <div className="flex items-center px-6 py-4">
-        
-        <div className="ml-auto -mt-25 flex items-center gap-2 text-sm ">
-          <span>Don&apos;t have an account?</span>
-          <Link href="/signup" className="underline">
-            Sign-up
-          </Link>
+
+    return (
+        // 👇 CHANGED lg:grid-cols-2 TO md:grid-cols-2
+        // This forces the side-by-side split on smaller laptop screens too
+        <div className="grid grid-cols-1 md:grid-cols-2 min-h-screen bg-black">
+
+            {/* --- LEFT SIDE: IMAGE --- */}
+            <div className="relative hidden md:block h-full w-full">
+                <img
+                    src="/loginimg.avif"
+                    alt="Login Background"
+                    className="absolute inset-0 h-full w-full object-cover opacity-80"
+                />
+                {/* Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black z-10" />
+            </div>
+
+            {/* --- RIGHT SIDE: LOGIN FORM --- */}
+            <div className="flex flex-col justify-center items-center px-8 md:px-16 py-12 bg-black z-20 h-full">
+
+                <div className="w-full max-w-md space-y-8 text-center">
+
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-2">
+                        WELCOME BACK
+                    </h1>
+                    <p className="text-gray-400 mb-8 text-lg">
+                        Login to support your favorite creators.
+                    </p>
+
+                    <div className="flex flex-col gap-4 w-full ">
+                        {/* Google Button */}
+                        <button
+                            onClick={() => signIn("google")}
+                            className="cursor-pointer flex items-center justify-center gap-3 w-full bg-white text-black font-bold text-lg px-6 py-4 rounded-xl hover:bg-gray-200 transition-all transform active:scale-[0.98] shadow-lg"
+                        >
+                            <FaGoogle className="text-green-600 text-2xl" />
+                            <span>Continue with Google</span>
+                        </button>
+
+                        {/* GitHub Button */}
+                        <button
+                            onClick={() => signIn("github")}
+                            className="cursor-pointer flex items-center justify-center gap-3 w-full bg-[#24292e] border border-gray-700 text-white font-bold text-lg px-6 py-4 rounded-xl hover:bg-[#2f363d] transition-all transform active:scale-[0.98] shadow-lg"
+                        >
+                            <FaGithub className="text-white text-2xl" />
+                            <span>Continue with GitHub</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="flex flex-col items-center">
-        <h1 className="text-4xl font-bold mt-25">WELCOME BACK</h1>
-
-        {/* Email Login */}
-        <div className="flex flex-col gap-4 mt-6 w-full max-w-sm">
-          <input
-            type="email"
-            placeholder="Email"
-            className="w-100 px-6 py-3 text-lg rounded-2xl
-                       bg-[#0b1220] border border-gray-700
-                       text-white placeholder-gray-400
-                       focus:outline-none focus:ring-2 focus:ring-purple-500"
-          />
-
-          <button
-            className="w-full py-3 rounded-3xl ml-2 mt-5
-                       bg-[#D4AF37] text-black font-semibold
-                       hover:bg-[#B8962E] transition"
-          >
-            Continue with Email
-          </button>
-        </div>
-
-        {/* Divider */}
-        <div className="flex items-center w-full max-w-sm my-10">
-          <div className="flex-1 h-px bg-gray-700" />
-          <span className="px-4 text-sm text-gray-400">
-            OR LOGIN WITH
-          </span>
-          <div className="flex-1 h-px bg-gray-700" />
-        </div>
-
-        {/* Social Login Buttons */}
-        <div className="flex flex-col gap-3 w-full max-w-sm ">
-          <button onClick={()=>{signIn("google")}} className="flex items-center cursor-pointer  text-black font-bold text-xl gap-3 bg-white border rounded-lg px-6 py-3 hover:bg-gray-200 transition">
-            <FaGoogle className="text-green-600 text-2xl" />
-            Continue with Google
-          </button>
-
-          <button className="flex items-center cursor-pointer text-black font-bold text-xl gap-3 bg-white border rounded-lg px-6 py-3 hover:bg-gray-200 transition">
-            <FaLinkedin className="text-blue-600 text-2xl" />
-            Continue with LinkedIn
-          </button>
-
-          <button className="flex items-center cursor-pointer gap-3 text-black font-bold text-xl bg-white border rounded-lg px-6 py-3 hover:bg-gray-200 transition">
-            <FaFacebook className="text-blue-700 text-2xl" />
-            Continue with Facebook
-          </button>
-
-          <button onClick={()=>{signIn("github")}} 
-          className="flex items-center cursor-pointer gap-3 text-black font-bold text-xl bg-white border rounded-lg px-6 py-3 hover:bg-gray-200 transition">
-            <FaGithub className="text-black text-2xl" />
-            Continue with GitHub
-          </button>
-
-          <button className="flex items-center cursor-pointer gap-3 text-black font-bold text-xl bg-white border rounded-lg px-6 py-3 hover:bg-gray-200 transition">
-            <FaApple className="text-black text-2xl" />
-            Continue with Apple
-          </button>
-        </div>
-      </div>
-    </>
-  );
+    );
 }

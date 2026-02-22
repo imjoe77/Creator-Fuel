@@ -1,17 +1,54 @@
 import mongoose from "mongoose";
-const {Schema, model} = mongoose;
-const userSchema = new Schema({
-    email:{type:String, required:true},
-    name:{type:String, required:true},
-    username:{type:String, required:true, unique:true},
-    profilePicture:{type:String},
-   coverPicture:{type:String},
-   razorpayId: { type: String },
-   razorpaySecret: { type: String },
-    createdat:{type:Date, default:Date.now},
-    updatedat:{type:Date, default:Date.now},
-});
+const { Schema, model } = mongoose;
 
-//Creating a model only once and reusing it to prevent OverwriteModelError (essential for Next.js hot-reloading)
+const userSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+
+    name: {
+      type: String,
+      default: "", // ✅ IMPORTANT: do NOT require this
+    },
+
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+
+    coverPicture: {
+      type: String,
+      default: "",
+    },
+
+    razorpayId: {
+      type: String,
+      default: "",
+    },
+
+    razorpaySecret: {
+      type: String,
+      default: "",
+    },
+  },
+  {
+    timestamps: true, // ✅ auto handles createdAt & updatedAt
+  }
+);
+
+// Prevent model overwrite in Next.js
 const User = mongoose.models.User || model("User", userSchema);
+
 export default User;

@@ -2,8 +2,7 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 import User from "@/app/models/User";
-import Payment from "@/app/models/Payment"; 
-import connectDb from "@/db/connectDb"; // <--- FIXED: You missed importing this!
+import connectDB from "@/db/connectDb";
 
 export const authOptions = {
   providers: [
@@ -12,54 +11,66 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
+      clientId: process.env.GITHUB_ID || "",
+      clientSecret: process.env.GITHUB_SECRET || "",
     }),
   ],
-  secret: process.env.NEXTAUTH_SECRET, // Make sure this is in your .env file
+
+  secret: process.env.NEXTAUTH_SECRET,
+
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Connect to DB immediately for any login attempt
-      if (account.provider === "github" || account.provider === "google") {
-        await connectDb();
+      try {
+        await connectDB();
+        
+        const email = user.email.toLowerCase();
+        
+        // Check if user already exists
+        const existingUser = await User.findOne({ email });
 
-        try {
-          // Check if user exists
-          const currentUser = await User.findOne({ email: user.email });
-
-          if (!currentUser) {
-            // Create new user if they don't exist
-            const newUser = new User({
-              email: user.email,
-              username: user.email.split("@")[0], // e.g. "john" from "john@gmail.com"
-              name: user.name,
-            });
-            await newUser.save();
-          }
-          return true; // Login successful
-        } catch (error) {
-          console.log("Error saving user to DB:", error);
-          return false; // Stop login if DB error occurs
+        if (!existingUser) {
+          // Create new user if they don't exist
+          await User.create({
+            name: user.name,
+            email: email,
+            username: email.split("@")[0], // Default username
+            profilePicture: user.image,
+          });
         }
+        return true;
+      } catch (error) {
+        console.error("SignIn callback error:", error);
+        return false;
       }
-      return true;
     },
 
-    // FIXED: Added this crucial callback so your frontend can access the username
-    async session({ session }) {
-      await connectDb();
-      const dbUser = await User.findOne({ email: session.user.email });
-      if (dbUser) {
+    // MERGED SESSION CALLBACK
+    async session({ session, token, user }) {
+      try {
+        // 1. Validate session
+        if (!session?.user?.email) return session;
+
+        // 2. Connect to DB
+        await connectDB();
         
-        session.user.username = dbUser.username;
-        // session user id
-         session.user.id = dbUser._id.toString();
+        // 3. Find the user in DB
+        const dbUser = await User.findOne({ email: session.user.email });
+        
+        if (dbUser) {
+          // 4. Inject the data into the session
+          session.user.name = dbUser.name;
+          session.user.username = dbUser.username; // <--- THIS is what you need for the links!
+          session.user.id = dbUser._id.toString(); // Useful to have ID too
+        }
+        
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return session;
       }
-      return session;
     },
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

@@ -3,35 +3,80 @@ import { updateProfile } from '@/actions/useractions';
 import React from 'react';
 const initialState = { success: null, message: '' };
 import { useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useState } from 'react';
 
-
-
-export default function DashboardSignup({user}) {
+//Function to fill up dashboard form details
+export default function DashboardSignup() {
+  //Controls whether the success/error message is visible.
   const [showMessage, setShowMessage] = React.useState(false);
+  //Connects form → server action.
   const [state, formAction] = React.useActionState(updateProfile, initialState);
-  
- useEffect(() => {
-  if (!state?.message) return;
+  //Holds the current user data fetched from DB.
+  const [user, setUser] = React.useState(null);
+  //State variable for email toast to prevent from mutliple continuous rendering
+  const [toastShown, setToastShown] = useState(false);
+
+
+  const handleClick = () => {
+    if (toastShown) return;
+
+    toast.error("Email cannot be changed! Contact support.");
+    setToastShown(true);
+
+    // allow toast again after 5 seconds
+    setTimeout(() => {
+      setToastShown(false);
+    }, 5000);
+  };
+
+  //Fetches data of current user from the Database
+  useEffect(() => {
+    const fetchUser = async () => {
+      const res = await fetch("/api/user/me");
+      const data = await res.json();
+      setUser(data.user);
+    };
+
+    fetchUser();
+  }, []);
+
+  //Refetches current user's data to fill in updated data from Database
+  useEffect(() => {
+    if (!state?.message) return;
+
+    // Trigger toast based on success or failure
+    if (state.success) {
+      toast.success(state.message);
+    } else {
+      toast.error(state.message);
+    }
+  }, [state]);
+
+
+  useEffect(() => {
+    //Controls visibility of message returned from server  
+    if (!state?.message) return;
     setShowMessage(true);
 
-  const timer = setTimeout(() => {
-   setShowMessage(false);
-  }, 3000);
+    //Timer for the message  
+    const timer = setTimeout(() => {
+      setShowMessage(false);
+    }, 3000);
 
-  return () => clearTimeout(timer);
-}, [state]);
+    return () => clearTimeout(timer);
+  }, [state]);
 
-useEffect(() => {
-  console.log("USER PROP IN CLIENT 👉", user);
-}, [user]);
+  //Fallback case if user not logged in or data not fetched
+  if (!user) {
+    return <p style={{ color: "white" }}>Loading profile...</p>;
+  }
 
-return (
+  //Load Form
+  return (
     <form action={formAction}>
-     {state?.message && (
-  <p key={state.message} style={{ color: state.success ? 'lightgreen' : 'salmon' }}>
-    {state.message}
-  </p>
-)}
+
 
 
       <div style={{
@@ -81,7 +126,7 @@ return (
                   id="name"
                   name="name"
                   defaultValue={user?.name || ""}
-                 
+
                   placeholder="Enter your name"
                   style={{
                     width: '100%',
@@ -116,35 +161,46 @@ return (
                 }}>
                   Email
                 </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                   defaultValue={user?.email || ""}
-                  
-                  placeholder="Enter your email"
-                  style={{
-                    width: '100%',
-                    padding: '0.75rem 1rem',
-                    background: 'rgba(51, 65, 85, 0.5)',
-                    border: '1px solid #475569',
-                    borderRadius: '0.5rem',
-                    color: 'white',
-                    fontSize: '1rem',
-                    outline: 'none',
-                    transition: 'all 0.2s'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#3b82f6';
-                    e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.5)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#475569';
-                    e.target.style.boxShadow = 'none';
-                  }}
-                />
+                <div
+                  className="relative w-full"
+                  onClickCapture={handleClick}
+                >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    defaultValue={user?.email || ""}
+                    readOnly
+                    className="cursor-not-allowed"
+                    placeholder="Enter your email"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem 1rem',
+                      background: 'rgba(51, 65, 85, 0.5)',
+                      border: '1px solid #475569',
+                      borderRadius: '0.5rem',
+                      color: 'white',
+                      fontSize: '1rem',
+                      outline: 'none',
+                      transition: 'all 0.2s'
+                    }}
+                    onFocus={(e) => {
+                      e.target.style.borderColor = '#3b82f6';
+                      e.target.style.boxShadow = '0 0 0 2px rgba(59, 130, 246, 0.5)';
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#475569';
+                      e.target.style.boxShadow = 'none';
+                    }}
+                  />
+                </div>
+                <div className="absolute right-3 top-2.5 text-gray-500 pointer-events-none">
+                  🔒
+                </div>
               </div>
-
+              <p className="text-[10px] text-gray-500">
+                Security Restriction: Email cannot be changed.
+              </p>
               {/* Username Field */}
               <div>
                 <label htmlFor="username" style={{
@@ -161,7 +217,7 @@ return (
                   id="username"
                   name="username"
                   defaultValue={user?.username || ""}
-                  
+
                   placeholder="Enter your username"
                   style={{
                     width: '100%',
@@ -201,7 +257,7 @@ return (
                   id="profilePicture"
                   name="profilePicture"
                   defaultValue={user?.profilePicture || ""}
-                 
+
                   placeholder="https://example.com/profile.jpg"
                   style={{
                     width: '100%',
@@ -241,7 +297,7 @@ return (
                   id="coverPicture"
                   name="coverPicture"
                   defaultValue={user?.coverPicture || ""}
-                 
+
                   placeholder="https://example.com/cover.jpg"
                   style={{
                     width: '100%',
@@ -295,8 +351,8 @@ return (
                     type="text"
                     id="razorpayId"
                     name="razorpayId"
-                    
-                    
+
+
                     placeholder="Enter Razorpay ID"
                     style={{
                       width: '100%',
@@ -335,8 +391,8 @@ return (
                     type="password"
                     id="razorpaySecret"
                     name="razorpaySecret"
-                   
-                    
+
+
                     placeholder="Enter Razorpay Secret"
                     style={{
                       width: '100%',
@@ -363,7 +419,7 @@ return (
 
               {/* Submit Button */}
               <button
-               type='submit'
+                type='submit'
                 style={{
                   width: '100%',
                   background: '#2563eb',
@@ -395,6 +451,6 @@ return (
         </div>
       </div>
     </form>
-    
+
   );
 }
