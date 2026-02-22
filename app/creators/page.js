@@ -118,7 +118,7 @@ const Explore = () => {
 
       {/* ── Main Content ── */}
       {/* Removed positive zIndex to ensure it doesn't fight with navbar */}
-      <div style={{ position: 'relative', textAlign: 'center', padding: '60px 24px', maxWidth: 900, width: '100%', margin: '0 auto' }}>
+      <div style={{ position: 'relative', textAlign: 'center', padding: 'clamp(36px, 8vw, 60px) clamp(16px, 5vw, 24px)', maxWidth: 900, width: '100%', margin: '0 auto' }}>
 
         {/* Title */}
         <h1 style={{
@@ -138,13 +138,13 @@ const Explore = () => {
         </h1>
 
         {/* Subtitle */}
-        <p style={{ color: '#94a3b8', fontSize: 15, lineHeight: 1.7, marginBottom: 56, maxWidth: 440, margin: '0 auto 56px' }}>
+        <p style={{ color: '#94a3b8', fontSize: 'clamp(13px, 3vw, 15px)', lineHeight: 1.7, marginBottom: 'clamp(32px, 8vw, 56px)', maxWidth: 440, margin: '0 auto clamp(32px, 8vw, 56px)' }}>
           Your next favorite streamer, artist, or developer is just a search away.<br />
           Use the search bar in the navbar above to find them.
         </p>
 
         {/* ── Category Cards ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 20, maxWidth: 800, margin: '0 auto' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 'clamp(12px, 4vw, 20px)', maxWidth: 800, margin: '0 auto' }}>
           {categories.map(({ label, icon, glow, glowSoft, border }) => (
             <div
               key={label}
@@ -154,8 +154,8 @@ const Explore = () => {
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 16,
-                padding: '36px 16px 32px',
+                gap: 'clamp(8px, 2vw, 16px)',
+                padding: 'clamp(24px, 5vw, 36px) clamp(10px, 3vw, 16px) clamp(20px, 4vw, 32px)',
                 background: 'rgba(255,255,255,0.04)',
                 backdropFilter: 'blur(16px)',
                 WebkitBackdropFilter: 'blur(16px)',
@@ -205,7 +205,7 @@ const Explore = () => {
               {/* Label */}
               <span style={{
                 position: 'relative', zIndex: 1,
-                fontSize: 13, fontWeight: 700, letterSpacing: '0.12em',
+                fontSize: 'clamp(11px, 2vw, 13px)', fontWeight: 700, letterSpacing: '0.12em',
                 color: '#e2e8f0', textTransform: 'uppercase',
               }}>
                 {label}
