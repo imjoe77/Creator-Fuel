@@ -87,7 +87,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
   }
   return (
     <>
-    <ToastContainer theme="dark" />
+   
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
       <div className="w-full text-white bg-gray-950 min-h-screen">
