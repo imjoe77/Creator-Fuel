@@ -1,9 +1,10 @@
 "use server"
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
-import User from "@/models/User";
-import Payment from "@/models/Payment";
+import mongoose from "mongoose";
 import connectDB from "@/db/connectDb";
+import User from "@/app/models/User";
+import { getServerSession } from "next-auth";
+import Razorpay from "razorpay"        // <--- To talk to Razorpay
+import Payment from "@/app/models/Payment" // <--- To save payment records
 import { revalidatePath } from "next/cache"; // 👈 Don't forget this!
 
 export const updateProfile = async (prevState, formData) => {
