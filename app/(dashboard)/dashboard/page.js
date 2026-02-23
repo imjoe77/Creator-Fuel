@@ -96,7 +96,7 @@ export default function DashboardSignup() {
               color: 'white',
               marginBottom: '0.5rem'
             }}>
-              Welcome to your Dashboard
+              Welcome to your Dashboard2
             </h1>
           </div>
 
