@@ -12,6 +12,12 @@ export default function Home() {
           max-width: 900px;
           margin: 0 auto;
         }
+        .fan-card {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
         .hero-title {
           font-size: 3.5rem;
         }
@@ -24,9 +30,12 @@ export default function Home() {
             gap: 32px;
             padding: 0 8px;
           }
+          .fan-card {
+            align-items: center;
+            text-align: center;
+          }
           .hero-title {
             font-size: 2.2rem;
-            text-align: center;
           }
           .hero-buttons {
             flex-direction: column;
@@ -73,7 +82,7 @@ export default function Home() {
 
         <div className="fans-grid">
           {/* Card 1 */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
+          <div className="fan-card">
             <div style={{ width: 100, height: 100, borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <img src="/telecommuting.gif" alt="Fans want to help" style={{ width: 72, height: 72, objectFit: 'contain' }} />
             </div>
@@ -84,7 +93,7 @@ export default function Home() {
           </div>
 
           {/* Card 2 */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
+          <div className="fan-card">
             <div style={{ width: 100, height: 100, borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <img src="/dollar.gif" alt="Fans want to contribute" style={{ width: 72, height: 72, objectFit: 'contain' }} />
             </div>
@@ -95,7 +104,7 @@ export default function Home() {
           </div>
 
           {/* Card 3 */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 16 }}>
+          <div className="fan-card">
             <div style={{ width: 100, height: 100, borderRadius: 20, overflow: 'hidden', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(255,255,255,0.04)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <img src="/collaboration.png" alt="Fans want to collaborate" style={{ width: 72, height: 72, objectFit: 'contain' }} />
             </div>
