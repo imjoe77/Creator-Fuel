@@ -5,7 +5,8 @@ import User from "@/app/models/User";
 import { getServerSession } from "next-auth";
 import Razorpay from "razorpay"        // <--- To talk to Razorpay
 import Payment from "@/app/models/Payment" // <--- To save payment records
-import { revalidatePath } from "next/cache"; // 👈 Don't forget this!
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache"; 
 
 export const updateProfile = async (prevState, formData) => {
     const updatedData = {};
