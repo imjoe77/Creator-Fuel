@@ -96,7 +96,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
 
 
           <img
-            src={defaultbannerpic} //if correct banner pic provided we can use bannerPic
+             src={bannerPic || defaultbannerpic} //if correct banner pic provided we can use bannerPic
             className='w-full h-1/3 object-cover shadow-lg'
             alt="Banner"
           />
