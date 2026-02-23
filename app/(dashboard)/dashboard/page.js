@@ -194,9 +194,7 @@ export default function DashboardSignup() {
                     }}
                   />
                 </div>
-                <div className="absolute right-3 top-2.5 text-gray-500 pointer-events-none">
-                  🔒
-                </div>
+               
               </div>
               <p className="text-[10px] text-gray-500">
                 Security Restriction: Email cannot be changed.
