@@ -1,123 +1,94 @@
 "use server"
-import mongoose from "mongoose";
-import connectDB from "@/db/connectDb";
-import User from "@/app/models/User";
 import { getServerSession } from "next-auth";
-import Razorpay from "razorpay"        // <--- To talk to Razorpay
-import Payment from "@/app/models/Payment" // <--- To save payment records
-
-
-
-
-//Authoptions contains the auth configuration(providers,callbacks,etc)
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import User from "@/models/User";
+import Payment from "@/models/Payment";
+import connectDB from "@/db/connectDb";
+import { revalidatePath } from "next/cache"; // 👈 Don't forget this!
 
-//Function to update user details and check validations
 export const updateProfile = async (prevState, formData) => {
-    //Object to carry updated data fields
     const updatedData = {};
     try {
         const session = await getServerSession(authOptions);
-        //Runs only if a user is logged in
         if (!session) {
             throw new Error("Not authenticated");
         }
-        //Get username from sessions for current user info
+        
         const emailFromSession = session.user.email.trim().toLowerCase();
         await connectDB();
 
-        //Finding current user from sessions username
         const currentUser = await User.findOne({ email: emailFromSession });
         if (!currentUser) {
             throw new Error("User not found");
         }
 
-        //Namings
+        // 1. EXTRACT ALL FIELDS 
+        const name = formData.get("name")?.trim();
         const uname = formData.get("username")?.trim();
-
         const ppic = formData.get("profilePicture")?.trim();
         const cpic = formData.get("coverPicture")?.trim();
         const rid = formData.get("razorpayId")?.trim();
         const rsc = formData.get("razorpaySecret")?.trim();
 
-        //Validations check before saving and updating info
-        // 1st check - Name exists and Making sure form's data and database data are not same
+        // 2. CHECK AND ASSIGN EACH FIELD
+        if (name && name !== currentUser.name) {
+            updatedData.name = name;
+        }
+
         if (uname && uname !== currentUser.username) {
-            //Query only if form data and DB data is unique
             const exisuname = await User.findOne({ username: uname });
-            //2nd check - Validating new name is unique in DB and Checking if existing name doesn't belong to current user
             if (exisuname && exisuname._id.toString() !== currentUser._id.toString()) {
-                return {
-                    success: false,
-                    message: "Username already exists"
-                };
+                return { success: false, message: "Username already exists" };
             }
-            //Pushing the changed data into an empty object
             updatedData.username = uname;
 
-            // Transfer all past payments to the new username! 
             try {
                 await Payment.updateMany(
-                    { to_user: currentUser.username }, // Find every payment with the OLD username
-                    { to_user: uname }                 // Replace it with the NEW username
+                    { to_user: currentUser.username }, 
+                    { to_user: uname }                 
                 );
             } catch (err) {
                 console.error("Failed to update old payments:", err);
             }
-
         }
 
-
-
-
-
-        //3rd check-Profile Picture 
         if (ppic && ppic !== currentUser.profilePicture) {
-            const exisppic = await User.findOne({ profilePicture: ppic });
-            if (exisppic && exisppic._id.toString() !== currentUser._id.toString()) {
-                return {
-                    success: false,
-                    message: "Same Pic uploaded"
-                };
-            }
             updatedData.profilePicture = ppic;
         }
 
-        //4th check-Cover Picture 
         if (cpic && cpic !== currentUser.coverPicture) {
-            const exiscpic = await User.findOne({ coverPicture: cpic });
-            if (exiscpic && exiscpic._id.toString() !== currentUser._id.toString()) {
-                return {
-                    success: false,
-                    message: "Same Pic uploaded"
-                };
-            }
             updatedData.coverPicture = cpic;
         }
 
-
-        //5th check-RazorPay Id check
-        if (rid && rid !== currentUser.razorpayId) {
+        if (rid !== undefined && rid !== (currentUser.razorpayId || "")) {
             updatedData.razorpayId = rid;
         }
 
-        //6th check-RazorPay Secret check
-        if (rsc && rsc !== currentUser.razorpaySecret) {
+        if (rsc !== undefined && rsc !== (currentUser.razorpaySecret || "")) {
             updatedData.razorpaySecret = rsc;
         }
 
-        //Checking if updated object has values in it and pushing all changes altogether in the DB
+        // 3. SAVE TO DATABASE
         if (Object.keys(updatedData).length > 0) {
             await User.findByIdAndUpdate(
                 currentUser._id,
                 { $set: updatedData }
             );
+
+            // 👇 CRITICAL: Clear the Next.js cache so the frontend sees the new data!
+            revalidatePath('/dashboard');
+            if (updatedData.username || currentUser.username) {
+                revalidatePath(`/${updatedData.username || currentUser.username}`);
+            }
+
+            // 👇 This return triggers the Green Toast on the frontend!
             return {
                 success: true,
                 message: "Profile updated Successfully..."
             }
         }
         else {
+            // 👇 This return triggers a Green Toast saying no changes were needed
             return {
                 success: true,
                 message: "No changes detected"
@@ -125,12 +96,14 @@ export const updateProfile = async (prevState, formData) => {
         }
     } catch (error) {
         console.error("Update profile error:", error);
+        // 👇 This return triggers the Red Toast on the frontend!
         return {
             success: false,
             message: "Something went wrong. Please try again."
         };
     }
 };
+
 
 
 //Function to initiate payments
