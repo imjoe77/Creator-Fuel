@@ -170,25 +170,31 @@ export default function DashboardSignup() {
                     Razorpay Credentials
                   </h3>
 
-                  {/* Razorpay ID */}
+                 {/* Razorpay ID */}
                   <div style={{ marginBottom: '1.5rem' }}>
                     <label htmlFor="razorpayId" style={labelStyle}>Razorpay ID</label>
-                    <input type="text" id="razorpayId" name="razorpayId" 
-                      defaultValue={user?.razorpayId || ""} // 👇 3. FIXED: Added defaultValue here
-                      placeholder="Enter Razorpay ID" style={inputStyle}
+                    <input 
+                      key={user?.razorpayId || 'rid'} // 👈 THE MAGIC FIX! Forces React to redraw the box.
+                      type="text" 
+                      id="razorpayId" 
+                      name="razorpayId" 
+                      defaultValue={user?.razorpayId || ""} 
+                      placeholder="Enter Razorpay ID" 
+                      style={inputStyle}
                       onFocus={e => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 2px rgba(59,130,246,0.5)'; }}
                       onBlur={e => { e.target.style.borderColor = '#475569'; e.target.style.boxShadow = 'none'; }}
                     />
                   </div>
 
-        {/* Razorpay Secret */}
+                  {/* Razorpay Secret */}
                   <div>
                     <label htmlFor="razorpaySecret" style={labelStyle}>Razorpay Secret</label>
                     <input 
-                      type="password"  // 👈 This turns it into ***
+                      key={user?.razorpaySecret || 'rsc'} // 👈 THE MAGIC FIX! Forces React to redraw the box.
+                      type="password" 
                       id="razorpaySecret" 
                       name="razorpaySecret" 
-                      defaultValue={user?.razorpaySecret || ""} // 👈 This puts the fetched secret inside!
+                      defaultValue={user?.razorpaySecret || ""} 
                       placeholder="Enter Razorpay Secret" 
                       style={inputStyle}
                       onFocus={e => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 2px rgba(59,130,246,0.5)'; }}
