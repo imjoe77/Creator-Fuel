@@ -190,12 +190,26 @@ export const searchUsers = async (query) => {
     }));
 }
 
-export const fetchUser = async (email) => {
-    await connectDB();
-    const user = await User.findOne({ email: email.trim().toLowerCase() }).lean();
-    if (!user) return null;
-    return {
-        ...user,
-        _id: user._id.toString(),
-    };
-}
+// Function to fetch current logged-in user details 
+export const fetchUser = async () => {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session) return null;
+
+        await connectDB();
+
+        const user = await User.findOne({ email: session.user.email.toLowerCase() }).lean();
+
+        if (user) {
+            user._id = user._id.toString(); 
+            
+            // 👇 THE FIX: This completely sanitizes the MongoDB object (Dates, ObjectIds, etc.) 
+            // so Next.js doesn't crash in production!
+            return JSON.parse(JSON.stringify(user)); 
+        }
+        return null;
+    } catch (error) {
+        console.error("Error fetching user:", error);
+        return null;
+    }
+};
