@@ -3,8 +3,8 @@ import mongoose from "mongoose";
 import connectDB from "@/db/connectDb";
 import User from "@/app/models/User";
 import { getServerSession } from "next-auth";
-import Razorpay from "razorpay"        // <--- To talk to Razorpay
-import Payment from "@/app/models/Payment" // <--- To save payment records
+import Razorpay from "razorpay"
+import Payment from "@/app/models/Payment"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache"; 
 
@@ -24,7 +24,6 @@ export const updateProfile = async (prevState, formData) => {
             throw new Error("User not found");
         }
 
-        // 1. EXTRACT ALL FIELDS 
         const name = formData.get("name")?.trim();
         const uname = formData.get("username")?.trim();
         const ppic = formData.get("profilePicture")?.trim();
@@ -32,7 +31,6 @@ export const updateProfile = async (prevState, formData) => {
         const rid = formData.get("razorpayId")?.trim();
         const rsc = formData.get("razorpaySecret")?.trim();
 
-        // 2. CHECK AND ASSIGN EACH FIELD
         if (name && name !== currentUser.name) {
             updatedData.name = name;
         }
@@ -62,22 +60,24 @@ export const updateProfile = async (prevState, formData) => {
             updatedData.coverPicture = cpic;
         }
 
-   if (rid && rid !== currentUser.razorpayId) {
+        // ✅ FIXED: only update if non-empty AND different from current value
+        if (rid && rid !== currentUser.razorpayId) {
             updatedData.razorpayId = rid;
         }
 
-   if (rsc && rsc !== currentUser.razorpaySecret) {
+        // ✅ FIXED: only update razorpaySecret if user actually typed something new
+        // If rsc is empty (browser cleared password field), keep existing secret untouched
+        if (rsc && rsc.length > 0 && rsc !== currentUser.razorpaySecret) {
             updatedData.razorpaySecret = rsc;
         }
+        // If rsc is empty, we do NOT touch razorpaySecret at all — existing value stays in DB
 
-        // 3. SAVE TO DATABASE
         if (Object.keys(updatedData).length > 0) {
             await User.findByIdAndUpdate(
                 currentUser._id,
                 { $set: updatedData }
             );
 
-            // Update the public profile for your fans!
             if (updatedData.username || currentUser.username) {
                 revalidatePath(`/${updatedData.username || currentUser.username}`);
             }
@@ -85,14 +85,13 @@ export const updateProfile = async (prevState, formData) => {
             return {
                 success: true,
                 message: "Profile updated Successfully!",
-                id: Math.random() // 👈 THIS forces React to trigger the Toast every time!
+                id: Math.random()
             }
-        }
-        else {
+        } else {
             return {
                 success: true,
                 message: "No changes detected",
-                id: Math.random() // 👈 Here too!
+                id: Math.random()
             }
         }
     } catch (error) {
@@ -104,35 +103,27 @@ export const updateProfile = async (prevState, formData) => {
     }
 };
 
-//Function to initiate payments
 export const initiate = async (amount, to_username, payment_form) => {
-    // 1. Connect to the database
     await connectDB()
 
-    // 2. Fetch the CREATOR (Receiver) to get THEIR specific keys
     let creator = await User.findOne({ username: to_username });
 
-    // 3. Validation: Stop if the creator hasn't set up their keys yet
     if (!creator || !creator.razorpayId || !creator.razorpaySecret) {
         throw new Error("Creator has not added their Razorpay credentials yet.");
     }
 
-    // 4. Setup the Razorpay "Cashier"
     var instance = new Razorpay({
         key_id: creator.razorpayId,
         key_secret: creator.razorpaySecret
     })
 
-    // 5. Create the "Bill" (Order)
     let options = {
         amount: Number.parseInt(amount) * 100,
         currency: "INR",
     }
 
-    // 6. Send the bill to Razorpay and wait for the Order ID
     let x = await instance.orders.create(options)
 
-    // 5. Create a Receipt in YOUR Database
     await Payment.create({
         oid: x.id,                   
         amount: amount,              
@@ -142,11 +133,9 @@ export const initiate = async (amount, to_username, payment_form) => {
         done: false,                 
     })
 
-    // 6. Return the Order details to the frontend so it can open the popup
     return x
 }
 
-//Function to fetch payments
 export const fetchPayments = async (username) => {
     await connectDB()
 
@@ -155,7 +144,6 @@ export const fetchPayments = async (username) => {
         .limit(10) 
         .lean() 
 
-    // FIX THE SERIALIZATION ERROR
     let plainPayments = p.map((doc) => ({
         ...doc,
         _id: doc._id.toString(), 
@@ -164,7 +152,6 @@ export const fetchPayments = async (username) => {
     return plainPayments
 }
 
-//Function to calculate payments summary
 export const fetchUserStats = async (username) => {
     await connectDB();
 
@@ -182,7 +169,6 @@ export const fetchUserStats = async (username) => {
     return stats.length > 0 ? stats[0] : { totalAmount: 0, totalCount: 0 };
 }
 
-// Function to search for creators
 export const searchUsers = async (query) => {
     if (!query || query.length < 2) return [];
 
