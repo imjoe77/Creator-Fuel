@@ -3,6 +3,7 @@ import { updateProfile, fetchUser } from '@/actions/useractions';
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/navigation';
 
 const initialState = { success: null, message: '' };
 
@@ -10,6 +11,7 @@ export default function DashboardSignup() {
   const [state, formAction] = React.useActionState(updateProfile, initialState);
   const [user, setUser] = useState(null);
   const [toastShown, setToastShown] = useState(false);
+  const router = useRouter();
 
   const loadUserData = async () => {
     try {
@@ -38,6 +40,7 @@ export default function DashboardSignup() {
     if (state.success) {
       toast.success(state.message);
       loadUserData();
+      router.refresh();
     } else {
       toast.error(state.message);
     }
