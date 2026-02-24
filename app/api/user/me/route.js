@@ -10,8 +10,9 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ user: null }, { status: 401 });
   }
- await connectDB();
-//Unique constraint to find user
+  await connectDB();
+  
+  //Unique constraint to find user
   const user = await User.findOne(
     { email: session.user.email.toLowerCase() },
     //Return only these specified fields
@@ -22,8 +23,10 @@ export async function GET() {
       profilePicture: 1,
       coverPicture: 1,
       razorpayId: 1,
+      razorpaySecret: 1, // 👈 ADDED THIS LINE! Now the secret goes to the frontend.
     }
   ).lean();
-//Sends data back to browser
+  
+  //Sends data back to browser
   return NextResponse.json({ user });
 }
