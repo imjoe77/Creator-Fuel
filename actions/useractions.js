@@ -203,3 +203,13 @@ export const searchUsers = async (query) => {
         _id: u._id.toString()
     }));
 }
+
+export const fetchUser = async (email) => {
+    await connectDB();
+    const user = await User.findOne({ email: email.trim().toLowerCase() }).lean();
+    if (!user) return null;
+    return {
+        ...user,
+        _id: user._id.toString(),
+    };
+}
