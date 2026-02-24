@@ -43,7 +43,7 @@ const SearchBar = () => {
     >
       <input
         type="text"
-        placeholder="Search creators..."
+        placeholder="Search ..."
         value={query}
         onChange={handleSearch}
         onFocus={() => { if (results.length > 0) setIsOpen(true) }}
