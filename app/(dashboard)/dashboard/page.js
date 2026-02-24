@@ -181,12 +181,15 @@ export default function DashboardSignup() {
                     />
                   </div>
 
-            {/* Razorpay Secret */}
+        {/* Razorpay Secret */}
                   <div>
                     <label htmlFor="razorpaySecret" style={labelStyle}>Razorpay Secret</label>
-                    <input type="password" id="razorpaySecret" name="razorpaySecret" 
-                      defaultValue="" // Keep this empty!
-                      placeholder="Leave blank to keep existing secret" // 👈 Add this helpful hint
+                    <input 
+                      type="password"  // 👈 This turns it into ***
+                      id="razorpaySecret" 
+                      name="razorpaySecret" 
+                      defaultValue={user?.razorpaySecret || ""} // 👈 This puts the fetched secret inside!
+                      placeholder="Enter Razorpay Secret" 
                       style={inputStyle}
                       onFocus={e => { e.target.style.borderColor = '#3b82f6'; e.target.style.boxShadow = '0 0 0 2px rgba(59,130,246,0.5)'; }}
                       onBlur={e => { e.target.style.borderColor = '#475569'; e.target.style.boxShadow = 'none'; }}
