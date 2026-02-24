@@ -62,11 +62,11 @@ export const updateProfile = async (prevState, formData) => {
             updatedData.coverPicture = cpic;
         }
 
-    if (rid !== undefined && rid !== (currentUser.razorpayId || "")) {
+   if (rid && rid !== currentUser.razorpayId) {
             updatedData.razorpayId = rid;
         }
 
-    if (rsc && rsc !== currentUser.razorpaySecret) {
+   if (rsc && rsc !== currentUser.razorpaySecret) {
             updatedData.razorpaySecret = rsc;
         }
 
