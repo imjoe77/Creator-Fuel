@@ -201,6 +201,7 @@ export default function DashboardSignup() {
                       onBlur={e => { e.target.style.borderColor = '#475569'; e.target.style.boxShadow = 'none'; }}
                     />
                   </div>
+                 </div>
 
                 {/* Submit */}
                 <button
