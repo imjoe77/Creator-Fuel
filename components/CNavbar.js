@@ -41,8 +41,8 @@ const CNavbar = () => {
         {/* Spacer */}
         <div style={{ flex: 1 }} />
 
-        {/* Desktop: search + account side by side on the right */}
-        <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+      {/* Desktop: search + account side by side on the right */}
+        <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           <SearchBar />
 
           {!session && (
@@ -55,7 +55,8 @@ const CNavbar = () => {
             <div ref={dropdownRef} style={{ position: 'relative' }} tabIndex="-1" onBlur={handleWrapperBlur}>
               <button
                 onClick={() => setOpen(prev => !prev)}
-                style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '9px 20px', borderRadius: 12, cursor: 'pointer', fontSize: 15, fontWeight: 600, maxWidth: 230 }}
+                // Removed maxWidth: 230 so it can stretch fully
+                style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '9px 20px', borderRadius: 12, cursor: 'pointer', fontSize: 15, fontWeight: 600 }}
               >
                 <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   Welcome {session.user.email}
@@ -66,7 +67,8 @@ const CNavbar = () => {
               </button>
 
               {open && (
-                <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 8px)', width: 230, borderRadius: 16, background: 'linear-gradient(135deg, #111827, #1f2937)', color: '#f1f5f9', boxShadow: '0 8px 40px rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.1)', zIndex: 99999 }}>
+                // Changed width: 230 to minWidth: '100%' so the menu matches the wider button
+                <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 8px)', minWidth: '100%', borderRadius: 16, background: 'linear-gradient(135deg, #111827, #1f2937)', color: '#f1f5f9', boxShadow: '0 8px 40px rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.1)', zIndex: 99999 }}>
                   <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: 'white', margin: 0 }}>Signed in as</p>
                     <p style={{ fontSize: 12, color: '#94a3b8', margin: '3px 0 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{session.user.email}</p>
