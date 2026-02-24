@@ -78,8 +78,12 @@ export const updateProfile = async (prevState, formData) => {
                 { $set: updatedData }
             );
 
-            if (updatedData.username || currentUser.username) {
-                revalidatePath(`/${updatedData.username || currentUser.username}`);
+// 1. ALWAYS clear the old username's cache so it stops haunting the server
+            revalidatePath(`/${currentUser.username}`);
+            
+            // 2. If they typed a new username, clear that new path too!
+            if (updatedData.username) {
+                revalidatePath(`/${updatedData.username}`);
             }
 
             return {
