@@ -41,8 +41,7 @@ const CNavbar = () => {
         {/* Spacer */}
         <div style={{ flex: 1 }} />
 
-     {/* Desktop: search + account side by side on the right */}
-        {/* 👇 Changed gap from 16 to 6 to pull the search bar right next to the button */}
+        {/* Desktop: search + account side by side on the right */}
         <div className="navbar-links" style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
           <SearchBar />
 
@@ -55,7 +54,6 @@ const CNavbar = () => {
           {session && (
             <div ref={dropdownRef} style={{ position: 'relative' }} tabIndex="-1" onBlur={handleWrapperBlur}>
               
-              {/* 👇 Increased maxWidth from 230 to 350 to show the full email */}
               <button
                 onClick={() => setOpen(prev => !prev)}
                 style={{ display: 'flex', alignItems: 'center', gap: 8, backgroundColor: '#7c3aed', color: 'white', border: 'none', padding: '9px 20px', borderRadius: 12, cursor: 'pointer', fontSize: 15, fontWeight: 600, maxWidth: 350 }}
@@ -69,7 +67,6 @@ const CNavbar = () => {
               </button>
 
               {open && (
-                {/* 👇 Changed width to minWidth: '100%' so the menu stretches perfectly with the wider button */}
                 <div style={{ position: 'absolute', right: 0, top: 'calc(100% + 8px)', minWidth: '100%', borderRadius: 16, background: 'linear-gradient(135deg, #111827, #1f2937)', color: '#f1f5f9', boxShadow: '0 8px 40px rgba(0,0,0,0.7)', border: '1px solid rgba(255,255,255,0.1)', zIndex: 99999 }}>
                   <div style={{ padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
                     <p style={{ fontSize: 14, fontWeight: 600, color: 'white', margin: 0 }}>Signed in as</p>
@@ -86,6 +83,7 @@ const CNavbar = () => {
               )}
             </div>
           )}
+        </div>
 
         {/* Hamburger */}
         <button
