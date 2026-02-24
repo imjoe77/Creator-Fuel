@@ -1,5 +1,5 @@
 'use client';
-import { updateProfile } from '@/actions/useractions';
+import { updateProfile, fetchUser } from '@/actions/useractions';
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,13 +11,12 @@ export default function DashboardSignup() {
   const [user, setUser] = useState(null);
   const [toastShown, setToastShown] = useState(false);
 
-  // 1. We wrap fetchUser in a reusable function so we can call it on load AND after saving
-  const fetchUser = async () => {
+  const loadUserData = async () => {
     try {
-      // Added a timestamp to force Next.js to skip the cache and get FRESH data
-      const res = await fetch(`/api/user/me?t=${Date.now()}`);
-      const data = await res.json();
-      setUser(data.user);
+      const data = await fetchUser(); 
+      if (data) {
+        setUser(data);
+      }
     } catch (error) {
       console.error("Failed to fetch user", error);
     }
@@ -30,19 +29,16 @@ export default function DashboardSignup() {
     setTimeout(() => { setToastShown(false); }, 5000);
   };
 
-  // Fetch on initial load
   useEffect(() => {
-    fetchUser();
+    loadUserData();
   }, []);
 
-  // Watch for Server Action responses
   useEffect(() => {
     if (!state?.message) return;
     
     if (state.success) {
       toast.success(state.message);
-      // 👇 2. CRITICAL FIX: Re-fetch the data immediately after a successful save!
-      fetchUser(); 
+      loadUserData(); 
     } else {
       toast.error(state.message);
     }
@@ -79,7 +75,6 @@ export default function DashboardSignup() {
 
   return (
     <>
-      {/* Moved ToastContainer outside the form to prevent rendering conflicts */}
       <ToastContainer theme="dark" />
       
       <form action={formAction}>
@@ -164,17 +159,17 @@ export default function DashboardSignup() {
                   />
                 </div>
 
-                {/* Razorpay Section */}
+                {/* Razorpay Section Wrapper */}
                 <div style={{ marginTop: '0.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(71, 85, 105, 0.5)' }}>
                   <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '1rem' }}>
                     Razorpay Credentials
                   </h3>
 
-                 {/* Razorpay ID */}
+                  {/* Razorpay ID */}
                   <div style={{ marginBottom: '1.5rem' }}>
                     <label htmlFor="razorpayId" style={labelStyle}>Razorpay ID</label>
                     <input 
-                      key={user?.razorpayId || 'rid'} // 👈 THE MAGIC FIX! Forces React to redraw the box.
+                      key={user?.razorpayId || 'rid'} 
                       type="text" 
                       id="razorpayId" 
                       name="razorpayId" 
@@ -190,7 +185,7 @@ export default function DashboardSignup() {
                   <div>
                     <label htmlFor="razorpaySecret" style={labelStyle}>Razorpay Secret</label>
                     <input 
-                      key={user?.razorpaySecret || 'rsc'} // 👈 THE MAGIC FIX! Forces React to redraw the box.
+                      key={user?.razorpaySecret || 'rsc'} 
                       type="password" 
                       id="razorpaySecret" 
                       name="razorpaySecret" 
@@ -201,7 +196,7 @@ export default function DashboardSignup() {
                       onBlur={e => { e.target.style.borderColor = '#475569'; e.target.style.boxShadow = 'none'; }}
                     />
                   </div>
-                 </div>
+                </div> {/* 👈 THIS DIV CLOSES THE RAZORPAY SECTION! */}
 
                 {/* Submit */}
                 <button
