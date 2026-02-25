@@ -40,7 +40,7 @@ export default function DashboardSignup() {
     if (!state?.message) return;
     if (state.success) {
       toast.success(state.message);
-     const data = await loadUserData();
+     const data =loadUserData();
       
       window.dispatchEvent(new Event('profileUpdated'));
     } else {
