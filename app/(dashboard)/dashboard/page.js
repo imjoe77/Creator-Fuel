@@ -15,7 +15,7 @@ export default function DashboardSignup() {
 
   const loadUserData = async () => {
     try {
-      const data = await fetchUser();
+      const data = fetchUser();
       if (data) {
         setUser(data);
          if (data.username) localStorage.setItem('myUsername', data.username);
