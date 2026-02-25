@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
             newestOnTop
             closeOnClick
             draggable
-            pauseOnHover={false}
+            pauseOnHover={true}
             theme="dark"
             style={{ zIndex: 999999 }}
           />
