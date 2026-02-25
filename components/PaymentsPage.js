@@ -69,7 +69,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       rzp1.open();
     } catch (error) {
       toast.dismiss(loadingToast)
-      toast.error("Failed to initiate payment. Try again or check your razorPay credentials!")
+      toast.error("Creator unable to receive payments right now due to payment configuration issue!!")
     }
   }
 
