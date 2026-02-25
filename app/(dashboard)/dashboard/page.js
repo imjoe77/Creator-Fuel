@@ -1,8 +1,8 @@
 'use client';
 import { updateProfile, fetchUser } from '@/actions/useractions';
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+
 import { useRouter } from 'next/navigation';
 
 const initialState = { success: null, message: '' };
@@ -66,7 +66,7 @@ export default function DashboardSignup() {
 
   return (
     <>
-      <ToastContainer theme="dark" />
+     
       <form action={formAction}>
         <div style={{ minHeight: '100vh', background: 'linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div style={{ width: '100%', maxWidth: '42rem' }}>
