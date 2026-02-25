@@ -202,7 +202,7 @@ export const fetchUser = async () => {
 
         await connectDB();
 
-        const user = await User.findOne({ email: session.user.email.toLowerCase() }).lean();
+       const user = await User.findOne({ email: session.user.email.toLowerCase() }, { razorpaySecret: 0 }).lean();
 
         if (user) {
             user._id = user._id.toString(); 
