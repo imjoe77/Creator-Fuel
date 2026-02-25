@@ -21,6 +21,16 @@ const CNavbar = () => {
     }
   }, [session]);
 
+  useEffect(() => {
+  const refetch = () => {
+    fetch("/api/user/me")
+      .then(res => res.json())
+      .then(data => { if (data?.user?.username) setRealUsername(data.user.username); })
+  }
+  window.addEventListener('profileUpdated', refetch)
+  return () => window.removeEventListener('profileUpdated', refetch)
+}, [])
+
   const handleWrapperBlur = (e) => {
     if (dropdownRef.current && dropdownRef.current.contains(e.relatedTarget)) return;
     setOpen(false);
