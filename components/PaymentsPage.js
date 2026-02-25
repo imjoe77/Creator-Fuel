@@ -3,8 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Script from 'next/script'
 import { initiate } from '@/actions/useractions'
 import { useSession } from 'next-auth/react'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 import { useSearchParams, useRouter } from 'next/navigation'
 
 const defaultprofilepic = "https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyZ241eGN6MWt1dmVobGlwaWNjMnQ1dXlocWgyZHMyNWN4NWEwY2d6dCZlcD12MV9zdGlja2Vyc19zZWFyY2gmY3Q9cw/Ll22OhMLAlVDb8UQWe/giphy.gif"
@@ -47,7 +46,10 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       return
     }
     try {
+     try {
+      const loadingToast = toast.loading("Processing payment...")
       let a = await initiate(amount, username, paymentForm)
+      toast.dismiss(loadingToast)
       let orderId = a.id
       var options = {
         "key": process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -75,7 +77,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
 
   return (
     <>
-      <ToastContainer />
+   
       <Script src="https://checkout.razorpay.com/v1/checkout.js"></Script>
 
       <div className="w-full text-white bg-gray-950 min-h-screen">
