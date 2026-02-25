@@ -45,8 +45,9 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       toast.error("Please enter a valid amount!")
       return
     }
+ let loadingToast = null
     try {
-      const loadingToast = toast.loading("Processing payment...")
+      loadingToast = toast.loading("Processing payment...")
       let a = await initiate(amount, username, paymentForm)
       toast.dismiss(loadingToast)
       let orderId = a.id
@@ -67,6 +68,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       var rzp1 = new Razorpay(options);
       rzp1.open();
     } catch (error) {
+      toast.dismiss(loadingToast)
       toast.error("Failed to initiate payment. Try again!")
     }
   }
