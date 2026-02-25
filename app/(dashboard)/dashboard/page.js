@@ -40,7 +40,7 @@ export default function DashboardSignup() {
     if (state.success) {
       toast.success(state.message);
       loadUserData();
-      router.refresh();
+   
       window.dispatchEvent(new Event('profileUpdated'));
     } else {
       toast.error(state.message);
