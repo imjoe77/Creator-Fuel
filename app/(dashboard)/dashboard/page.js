@@ -114,10 +114,20 @@ export default function DashboardSignup() {
                     <input key={user?.razorpayId || 'rid'} type="text" id="razorpayId" name="razorpayId" defaultValue={user?.razorpayId || ""} placeholder="Enter Razorpay ID" style={inputStyle} onFocus={e => { e.target.style.borderColor = '#3b82f6'; }} onBlur={e => { e.target.style.borderColor = '#475569'; }} />
                   </div>
                   
-                  <div>
-                    <label htmlFor="razorpaySecret" style={labelStyle}>Razorpay Secret</label>
-                    <input key={user?.razorpaySecret || 'rsc'} type="password" id="razorpaySecret" name="razorpaySecret" defaultValue={user?.razorpaySecret || ""} placeholder="Enter Razorpay Secret" style={inputStyle} onFocus={e => { e.target.style.borderColor = '#3b82f6'; }} onBlur={e => { e.target.style.borderColor = '#475569'; }} />
-                  </div>
+                 <div>
+  <label htmlFor="razorpaySecret" style={labelStyle}>Razorpay Secret</label>
+  <input
+    key={user?.hasRazorpaySecret ? 'has-secret' : 'no-secret'}
+    type="password"
+    id="razorpaySecret"
+    name="razorpaySecret"
+    defaultValue=""
+    placeholder={user?.hasRazorpaySecret ? "Secret saved — enter new to change" : "Enter Razorpay Secret"}
+    style={inputStyle}
+    onFocus={e => { e.target.style.borderColor = '#3b82f6'; }}
+    onBlur={e => { e.target.style.borderColor = '#475569'; }}
+  />
+</div>
                 </div>
 
                 <button type="submit" style={{ width: '100%', background: '#2563eb', color: 'white', fontWeight: '600', padding: '0.75rem 1.5rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer', fontSize: '1rem', transition: 'all 0.2s', marginTop: '0.5rem' }}>
