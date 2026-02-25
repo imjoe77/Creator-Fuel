@@ -16,15 +16,7 @@ export async function GET() {
   const user = await User.findOne(
     { email: session.user.email.toLowerCase() },
     //Return only these specified fields
-    {
-      name: 1,
-      email: 1,
-      username: 1,
-      profilePicture: 1,
-      coverPicture: 1,
-      razorpayId: 1,
-      razorpaySecret: 1, // 👈 ADDED THIS LINE! Now the secret goes to the frontend.
-    }
+   { name: 1, email: 1, username: 1, profilePicture: 1, coverPicture: 1, razorpayId: 1, hasRazorpaySecret: 1 }
   ).lean();
   
   //Sends data back to browser
