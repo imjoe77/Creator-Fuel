@@ -18,6 +18,7 @@ export default function DashboardSignup() {
       const data = await fetchUser();
       if (data) {
         setUser(data);
+         if (data.username) localStorage.setItem('myUsername', data.username);
       }
     } catch (error) {
       console.error("Failed to fetch user", error);
@@ -39,8 +40,8 @@ export default function DashboardSignup() {
     if (!state?.message) return;
     if (state.success) {
       toast.success(state.message);
-      loadUserData();
-   
+     const data = await loadUserData();
+      
       window.dispatchEvent(new Event('profileUpdated'));
     } else {
       toast.error(state.message);
