@@ -82,10 +82,10 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
 
         {/* BANNER */}
         <div className="w-full flex flex-col items-center justify-center mb-8 sm:mb-12">
-          <img src={bannerPic || defaultbannerpic} className="w-full h-32 sm:h-48 md:h-56 object-cover shadow-lg" alt="Banner" />
+          <img src={bannerPic || defaultbannerpic} className="w-full h-64 sm:h-80 md:h-96 object-cover object-center shadow-lg" alt="Banner" />
           <img
             src={profilePic || defaultprofilepic}
-            className="-mt-12 sm:-mt-16 h-24 w-24 sm:h-32 sm:w-32 md:h-36 md:w-36 rounded-full object-cover ring-4 ring-white shadow-2xl bg-black transition-transform duration-300 hover:scale-105"
+            className="-mt-20 sm:-mt-24 md:-mt-28 h-36 w-36 sm:h-44 sm:w-44 md:h-52 md:w-52 rounded-full object-cover ring-4 ring-white shadow-2xl bg-black transition-transform duration-300 hover:scale-105"
             alt="Profile"
           />
           <h2 className="mt-3 text-2xl sm:text-3xl md:text-4xl font-bold">@{username}</h2>
