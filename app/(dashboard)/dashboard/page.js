@@ -93,7 +93,8 @@ export default function DashboardSignup() {
               <div>
                 <label htmlFor="username" style={labelStyle}>Username</label>
                 <input type="text" id="username" name="username" defaultValue={user?.username || ""} placeholder="Enter your username" style={inputStyle} onFocus={e => { e.target.style.borderColor = '#3b82f6'; }} onBlur={e => { e.target.style.borderColor = '#475569'; }} />
-              </div>
+                <p style={{ fontSize: 10, color: '#6b7280', marginTop: 4 }}>Note: Refresh page after username update.</p>
+                </div>
 
               <div>
                 <label htmlFor="profilePicture" style={labelStyle}>Profile Picture URL</label>
