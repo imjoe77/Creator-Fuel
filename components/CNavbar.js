@@ -11,21 +11,27 @@ const CNavbar = () => {
   const dropdownRef = useRef(null);
   const [RealUsername, setRealUsername] = useState("");
 
-  useEffect(() => {
-    if (session) {
-      setRealUsername(session.user.username);
-      fetch("/api/user/me")
-        .then(res => res.json())
-        .then(data => { if (data?.user?.username) setRealUsername(data.user.username); })
-        .catch(err => console.error("Failed to fetch fresh user data", err));
-    }
-  }, [session]);
-
-  useEffect(() => {
-  const refetch = () => {
+useEffect(() => {
+  if (session) {
+    const cached = localStorage.getItem('myUsername');
+    if (cached) setRealUsername(cached);
+    
     fetch("/api/user/me")
       .then(res => res.json())
-      .then(data => { if (data?.user?.username) setRealUsername(data.user.username); })
+      .then(data => {
+        if (data?.user?.username) {
+          setRealUsername(data.user.username);
+          localStorage.setItem('myUsername', data.user.username);
+        }
+      })
+      .catch(err => console.error("Failed to fetch fresh user data", err));
+  }
+}, [session]);
+
+useEffect(() => {
+  const refetch = () => {
+    const cached = localStorage.getItem('myUsername');
+    if (cached) setRealUsername(cached);
   }
   window.addEventListener('profileUpdated', refetch)
   return () => window.removeEventListener('profileUpdated', refetch)
