@@ -31,7 +31,7 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
     paymentForm.name.trim().length === 0 ||
     Number(paymentForm.amount) <= 0;
 
-  const pay = async (amount) => {
+ const pay = async (amount) => {
     if (!session) {
       toast.error("Please login to pay! 🔒")
       router.push('/login')
@@ -46,7 +46,6 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       return
     }
     try {
-     try {
       const loadingToast = toast.loading("Processing payment...")
       let a = await initiate(amount, username, paymentForm)
       toast.dismiss(loadingToast)
