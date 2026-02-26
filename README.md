@@ -1,4 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ☕ Get Me a Coffee (Creator-Fuel)
+
+![Next.js](https://img.shields.io/badge/Next.js-16.1-black?logo=next.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Enabled-47A248?logo=mongodb)
+![Razorpay](https://img.shields.io/badge/Razorpay-Integrated-02042B?logo=razorpay)
+![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?logo=vercel)
+
+**Get Me a Coffee** is a full-stack monetization platform built for creators, developers, and artists. It empowers fans to directly support their favorite creators through a seamless, secure payment gateway. 
+
+Built with the latest **Next.js 16 App Router**, this project heavily utilizes modern React paradigms, including highly secure Server Actions, dynamic routing, and aggressive caching strategies for optimal performance.
+
+## ✨ Key Features
+
+* 🔐 **Secure Authentication:** Session management and OAuth integration powered by **NextAuth.js**.
+* 💳 **Direct Payments:** End-to-end payment flow using the **Razorpay API**, allowing creators to plug in their own API keys to receive funds directly.
+* ⚡ **Server Actions:** Bypasses traditional REST APIs using Next.js Server Actions for secure, direct-to-database mutations and profile updates.
+* 🚀 **Aggressive Cache Management:** Intelligent use of Next.js `revalidatePath` and `force-dynamic` rendering to ensure zero stale data on creator profiles.
+* 🧑‍💻 **Dynamic Creator Profiles:** Custom vanity URLs generated dynamically for every registered creator (e.g., `domain.com/username`).
+* 🛡️ **Bulletproof DB Operations:** Strict MongoDB payload serialization and validation to prevent injection or data-loss during profile updates.
+
+## 🛠️ Tech Stack
+
+* **Framework:** [Next.js](https://nextjs.org/) (App Router, Turbopack)
+* **Language:** JavaScript (ES6+) / React
+* **Database:** [MongoDB](https://www.mongodb.com/) & [Mongoose](https://mongoosejs.com/)
+* **Authentication:** [NextAuth.js](https://next-auth.js.org/)
+* **Payment Gateway:** [Razorpay](https://razorpay.com/)
+* **Deployment:** [Vercel](https://vercel.com/)
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### 1. Clone the repository
+```bash
+git clone [https://github.com/imjoe77/Creator-Fuel.git](https://github.com/imjoe77/Creator-Fuel.git)
+cd Creator-Fuel
 
 ## Getting Started
 
