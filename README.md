@@ -27,6 +27,9 @@ Built with the latest **Next.js 16 App Router**, this project heavily utilizes m
 * **Payment Gateway:** [Razorpay](https://razorpay.com/)
 * **Deployment:** [Vercel](https://vercel.com/)
 
+Experience the app in action: 
+https://creator-fuel-six.vercel.app/
+
 ## 🚀 Getting Started
 
 Follow these steps to set up the project locally on your machine.
