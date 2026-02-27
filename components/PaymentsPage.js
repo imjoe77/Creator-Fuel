@@ -50,14 +50,13 @@ const PaymentsPage = ({ username, payments, profilePic, bannerPic, stats }) => {
       loadingToast = toast.loading("Processing payment...")
       let a = await initiate(amount, username, paymentForm)
       toast.dismiss(loadingToast)
-      let orderId = a.id
       var options = {
-        "key": process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+       "key": a.keyId,
         "amount": amount * 100,
         "currency": "INR",
         "name": "Get Me A Coffee",
         "description": "Support Creator",
-        "order_id": orderId,
+       "order_id": a.id,
         "callback_url": `${process.env.NEXT_PUBLIC_URL}/api/razorpay`,
         "prefill": {
           "name": paymentForm.name,
