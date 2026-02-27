@@ -20,15 +20,21 @@ export const POST = async (req) => {
         return NextResponse.json({ success: false, message: "Order Not Found" });
     }
 
+    // 👇 NEW: Fetch the specific creator to get THEIR secret key!
+    let creator = await User.findOne({ username: p.to_user });
+    if (!creator) {
+        return NextResponse.json({ success: false, message: "Creator Not Found" });
+    }
+
     // 3. Verify the Signature (The Security Check)
-    // We match the signature Razorpay sent vs. what we generate with our Secret Key
+    // We match the signature Razorpay sent vs. what we generate with the CREATOR'S Secret Key
     let isValid = validatePaymentVerification(
         {
             "order_id": body.razorpay_order_id,
             "payment_id": body.razorpay_payment_id
         },
-        body.razorpay_signature, //Signature(SECRET KEY->HMAC SHA256 hash->HMAC_SHA256(order_id|payment_id, SECRET_KEY))
-        process.env.RAZORPAY_KEY_SECRET 
+        body.razorpay_signature, 
+        creator.razorpaySecret.trim() // ✅ THE FIX: Using the creator's secret from the database!
     );
 
     if (isValid) {
@@ -40,7 +46,6 @@ export const POST = async (req) => {
         );
         
         // 5. Redirect User to their page with a success flag
-        // This sends them back to: localhost:3000/nathu?payment=success
         return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/${updatedPayment.to_user}?payment=success`);
     } else {
         return NextResponse.json({ success: false, message: "Payment Verification Failed" });
