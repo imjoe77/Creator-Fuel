@@ -138,14 +138,17 @@ export const initiate = async (amount, to_username, payment_form) => {
         done: false,                 
     })
 
-    return x
+    return {
+        id: x.id,
+        keyId: creator.razorpayId
+    }
 }
 
 export const fetchPayments = async (username) => {
     await connectDB()
 
     let p = await Payment.find({ to_user: username, done: true })
-        .sort({ createdAt: -1 }) 
+      .sort({ _id: -1 })
         .limit(10) 
         .lean() 
 
