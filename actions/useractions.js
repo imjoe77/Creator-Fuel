@@ -116,9 +116,10 @@ export const initiate = async (amount, to_username, payment_form) => {
         throw new Error("Creator has not added their Razorpay credentials yet.");
     }
 
+  // 4. Setup the Razorpay "Cashier"
     var instance = new Razorpay({
-        key_id: creator.razorpayId,
-        key_secret: creator.razorpaySecret
+        key_id: creator.razorpayId.trim(),       // adding .trim() HERE
+        key_secret: creator.razorpaySecret.trim() // adding .trim() HERE
     })
 
     let options = {
