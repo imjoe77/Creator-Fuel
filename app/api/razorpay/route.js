@@ -20,7 +20,7 @@ export const POST = async (req) => {
         return NextResponse.json({ success: false, message: "Order Not Found" });
     }
 
-    // 👇 NEW: Fetch the specific creator to get THEIR secret key!
+    // Fetch the specific creator to get THEIR secret key!
     let creator = await User.findOne({ username: p.to_user });
     if (!creator) {
         return NextResponse.json({ success: false, message: "Creator Not Found" });
@@ -34,7 +34,7 @@ export const POST = async (req) => {
             "payment_id": body.razorpay_payment_id
         },
         body.razorpay_signature, 
-        creator.razorpaySecret.trim() // ✅ THE FIX: Using the creator's secret from the database!
+        creator.razorpaySecret.trim() // Using the creator's secret from the database!
     );
 
     if (isValid) {
