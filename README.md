@@ -77,7 +77,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 --
 ## 🔗 Links
 
-- 🌐 Live App → https://creatorfuel-six.vercel.app  
-- 📄 Documentation → https://imjoe77.github.io/creatorfuel-docs/  
+- 🌐 Live App → https://creator-fuel-six.vercel.app/ 
+- 📄 Documentation → https://imjoe77.github.io/creatorfuel-docs/ 
 - 📂 Docs Repository → https://github.com/imjoe77/creatorfuel-docs  
-- 💻 Source Code → https://github.com/imjoe77/creatorfuel
+
