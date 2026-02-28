@@ -60,12 +60,12 @@ export const updateProfile = async (prevState, formData) => {
             updatedData.coverPicture = cpic;
         }
 
-        // ✅ FIXED: only update if non-empty AND different from current value
+        //  only update if non-empty AND different from current value
         if (rid && rid !== currentUser.razorpayId) {
             updatedData.razorpayId = rid;
         }
 
-        // ✅ FIXED: only update razorpaySecret if user actually typed something new
+        // only update razorpaySecret if user actually typed something new
         // If rsc is empty (browser cleared password field), keep existing secret untouched
         if (rsc && rsc.length > 0 && rsc !== currentUser.razorpaySecret) {
             updatedData.razorpaySecret = rsc;
@@ -211,7 +211,7 @@ export const fetchUser = async () => {
         if (user) {
             user._id = user._id.toString(); 
             
-            // 👇 THE FIX: This completely sanitizes the MongoDB object (Dates, ObjectIds, etc.) 
+            // This completely sanitizes the MongoDB object (Dates, ObjectIds, etc.) 
             // so Next.js doesn't crash in production!
             return JSON.parse(JSON.stringify(user)); 
         }
