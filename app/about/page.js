@@ -30,6 +30,17 @@ const About = () => {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#000', color: '#fff', fontFamily: 'sans-serif', position: 'relative', overflow: 'hidden' }}>
 
+      <style>{`
+        .features-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        .stats-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        .mission-section { flex-direction: row !important; }
+        @media (max-width: 640px) {
+          .features-grid { grid-template-columns: 1fr !important; }
+          .stats-grid { grid-template-columns: 1fr !important; }
+          .mission-section { flex-direction: column !important; align-items: center !important; }
+        }
+      `}</style>
+
       {/* Background Glows */}
       <div style={{ position: 'fixed', inset: 0, zIndex: -10, pointerEvents: 'none' }}>
         <div style={{ position: 'absolute', top: 0, left: '20%', width: 500, height: 500, background: 'radial-gradient(circle, rgba(88,28,135,0.25) 0%, transparent 70%)', borderRadius: '50%' }} />
@@ -61,12 +72,11 @@ const About = () => {
         </div>
 
         {/* ── Mission ── */}
-        <div style={{
+        <div className="mission-section" style={{
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 24, padding: '48px 40px', marginBottom: 72,
           display: 'flex', alignItems: 'center', gap: 56, flexWrap: 'wrap',
         }}>
-          {/* Image */}
           <div style={{
             flexShrink: 0, width: 200, height: 200, borderRadius: 20, overflow: 'hidden',
             background: 'linear-gradient(135deg, rgba(192,132,252,0.1), rgba(96,165,250,0.1))',
@@ -75,7 +85,6 @@ const About = () => {
             <img src="/collaboration.png" alt="CreatorFuel" style={{ width: 160, height: 'auto', objectFit: 'contain' }} />
           </div>
 
-          {/* Text */}
           <div style={{ flex: 1, minWidth: 260 }}>
             <h2 style={{ fontSize: 28, fontWeight: 700, color: '#fff', marginBottom: 20 }}>Our Mission</h2>
             <p style={{ color: '#9ca3af', lineHeight: 1.8, marginBottom: 16 }}>
@@ -99,8 +108,7 @@ const About = () => {
             <p style={{ color: '#6b7280', fontSize: 14 }}>Built with creators at the center — always.</p>
           </div>
 
-          {/* 3-Column Grid — inline style guarantees it works */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
+          <div className="features-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
             {features.map(({ icon, title, description }) => (
               <div key={title} style={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center',
@@ -124,12 +132,12 @@ const About = () => {
         </div>
 
         {/* ── Stats ── */}
-        <div style={{
+        <div className="stats-grid" style={{
           background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
           borderRadius: 24, padding: '48px 40px', marginBottom: 72,
           display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 24, textAlign: 'center',
         }}>
-          {stats.map(({ value, label }, i) => (
+          {stats.map(({ value, label }) => (
             <React.Fragment key={label}>
               <div>
                 <div style={{ fontSize: 48, fontWeight: 800, color: '#fff', lineHeight: 1.1, marginBottom: 8 }}>
